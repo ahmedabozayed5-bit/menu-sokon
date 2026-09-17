@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سكون | Sokooon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  
+  <style>
+    :root {
+      --bg: #121212;
+      --card: #1e1e1e;
+      --accent: #d4af37;
+      --accent-hover: #b8962d;
+      --text: #ffffff;
+      --text-muted: #aaaaaa;
+      --border: #333333;
+      --confirm: #25d366;
+      --danger: #ff4d4d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding-bottom: 90px;
+    }
+
+    header {
+      background-color: var(--card);
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header h1 {
+      color: var(--accent);
+      font-size: 1.5rem;
+    }
+
+    .table-info {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .tabs {
+      display: flex;
+      overflow-x: auto;
+      background: var(--card);
+      padding: 10px;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 61px;
+      z-index: 99;
+    }
+
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab {
+      padding: 8px 16px;
+      background: var(--bg);
+      border-radius: 20px;
+      white-space: nowrap;
+      font-size: 0.9rem;
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background: var(--accent);
+      color: #000;
+      font-weight: bold;
+      border-color: var(--accent);
+    }
+
+    .container {
+      padding: 15px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      color: var(--accent);
+      margin: 20px 0 10px 0;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 5px;
+    }
+
+    .item {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--border);
+    }
+
+    .item-info { flex: 1; }
+    .item-name { font-weight: 600; font-size: 1rem; }
+    .item-price { color: var(--accent); font-weight: bold; margin-top: 4px; }
+
+    .add-btn {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .cart-bar {
+      position: fixed;
+      bottom: 15px;
+      left: 15px;
+      right: 15px;
+      max-width: 570px;
+      margin: 0 auto;
+      background: var(--accent);
+      color: #000;
+      padding: 12px 20px;
+      border-radius: 30px;
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+
+    .cart-bar.show { display: flex; }
+    .cart-btn {
+      background: #000;
+      color: #fff;
+      border: none;
+      padding: 6px 15px;
+      border-radius: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* Modals & Overlays */
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      justify-content: center;
+      align-items: flex-end;
+      z-index: 2000;
+    }
+
+    .overlay.show { display: flex; }
+
+    .sheet {
+      background: var(--card);
+      width: 100%;
+      max-width: 600px;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      padding: 20px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .sheet-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 0 auto 15px auto;
+    }
+
+    .opt-label { margin: 10px 0 5px 0; font-size: 0.9rem; color: var(--text-muted); }
+    .opt-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+
+    .opt-pill {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .opt-pill.sel {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      resize: none;
+      height: 60px;
+      margin-bottom: 15px;
+    }
+
+    .sheet-cta {
+      width: 100%;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .cart-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-line-meta { font-size: 0.8rem; color: var(--text-muted); }
+    .cart-line-remove { color: var(--danger); background: none; border: none; cursor: pointer; }
+
+    /* Admin View & QR Generator */
+    .admin-box {
+      padding: 20px;
+      background: var(--card);
+      margin: 20px;
+      border-radius: 10px;
+    }
+
+    .qr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .qr-card {
+      background: #fff;
+      color: #000;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .qr-card canvas {
+      width: 100% !important;
+      height: auto !important;
+    }
+
+    .qr-label { font-weight: bold; margin-top: 5px; font-size: 0.9rem; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #adminView, #adminView * { visibility: visible; }
+      #adminView { position: absolute; left: 0; top: 0; width: 100%; }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>سكون ☕</h1>
+  <div class="table-info" id="tableChip">اختر طلبك</div>
+  <div class="table-info" id="customerNameRow" style="display:none;">العميل: <span id="customerNameText"></span></div>
+</header>
+
+<!-- Prompt Modal if no table query -->
+<div class="overlay" id="tablePrompt" style="align-items:center;">
+  <div class="sheet" style="border-radius:15px; text-align:center;">
+    <h3>مرحباً بك في سكون</h3>
+    <p style="font-size:0.85rem; color:var(--text-muted); margin: 10px 0;">يرجى إدخال البيانات للبدء</p>
+    <input type="number" id="tableInput" placeholder="رقم الطاولة" style="width:100%; padding:10px; margin-bottom:10px; background:var(--bg); border:1px solid var(--border); color:#fff; border-radius:8px; text-align:center;">
+    <input type="text" id="nameInput" placeholder="الاسم (اختياري)" style="width:100%; padding:10px; margin-bottom:15px; background:var(--bg); border:1px solid var(--border); color:#fff; border-radius:8px; text-align:center;">
+    <button class="sheet-cta" id="tableConfirmBtn">دخول للمنيو</button>
+  </div>
+</div>
+
+<div id="menuView">
+  <div class="tabs" id="tabsRow"></div>
+  <div class="container" id="menuMain"></div>
+</div>
+
+<div id="adminView" style="display:none;">
+  <div class="admin-box no-print">
+    <h3>مولد أكواد الطاولات (QR Generator)</h3>
+    <br>
+    <label>من طاولة: <input type="number" id="fromTable" value="1" style="width:50px; padding:5px;"></label>
+    <label>إلى طاولة: <input type="number" id="toTable" value="10" style="width:50px; padding:5px;"></label>
+    <br><br>
+    <button class="sheet-cta" id="genQrBtn" style="width:auto; padding:8px 20px;">توليد QR</button>
+    <button class="sheet-cta" id="printQrBtn" style="width:auto; padding:8px 20px; background:#fff; color:#000;">طباعة الأكواد</button>
+  </div>
+  <div class="qr-grid" id="qrGrid"></div>
+</div>
+
+<!-- Bottom Floating Cart Bar -->
+<div class="cart-bar" id="cartBar">
+  <div>
+    <div id="cartBarText" style="font-weight:bold;">0 أصناف</div>
+    <div id="cartBarSub" style="font-size:0.8rem;">الإجمالي: 0 ج.م</div>
+  </div>
+  <button class="cart-btn" id="openCartBtn">عرض الطلب</button>
+</div>
+
+<!-- Item Customization Overlay -->
+<div class="overlay" id="itemOverlay">
+  <div class="sheet" id="itemSheet"></div>
+</div>
+
+<!-- Cart Details Overlay -->
+<div class="overlay" id="cartOverlay">
+  <div class="sheet" id="cartSheet"></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const MENU = [
+    { cat: "Cold Drinks", items: [
+      { id:"c1", name:"Iced Caramel Macchiato", desc:"", price:65, sugar:false },
+      { id:"c2", name:"Iced Mocha", desc:"", price:60, sugar:false },
+      { id:"c3", name:"Iced Latte", desc:"", price:55, sugar:false },
+      { id:"c4", name:"Iced Spanish Latte", desc:"", price:65, sugar:false },
+      { id:"c5", name:"Iced White Mocha", desc:"", price:65, sugar:false },
+      { id:"c6", name:"Iced Chocolate", desc:"", price:55, sugar:false },
+      { id:"c7", name:"Iced Tea", desc:"", price:35, sugar:false },
+      { id:"c8", name:"Iced Americano", desc:"", price:45, sugar:false },
+      { id:"c9", name:"Milkshake Vanilla", desc:"", price:60, sugar:false },
+      { id:"c10", name:"Milkshake Chocolate", desc:"", price:60, sugar:false },
+      { id:"c11", name:"Milkshake Caramel", desc:"", price:60, sugar:false },
+      { id:"c12", name:"Milkshake Mango", desc:"", price:65, sugar:false },
+      { id:"c13", name:"Milkshake Strawberry", desc:"", price:65, sugar:false },
+      { id:"c14", name:"Oreo Shake", desc:"", price:65, sugar:false },
+      { id:"c15", name:"Mojito Classic", desc:"", price:45, sugar:false },
+      { id:"c16", name:"Mojito Blueberry", desc:"", price:50, sugar:false },
+      { id:"c17", name:"Mojito Strawberry", desc:"", price:50, sugar:false }
+    ]},
+    { cat: "Hot Drinks", items: [
+      { id:"h1", name:"Espresso Single", desc:"", price:25, sugar:false },
+      { id:"h2", name:"Espresso Double", desc:"", price:35, sugar:false },
+      { id:"h3", name:"Turkish Coffee Single", desc:"", price:25, sugar:true },
+      { id:"h4", name:"French Coffee", desc:"", price:35, sugar:true },
+      { id:"h5", name:"Cappuccino L", desc:"", price:50, sugar:false },
+      { id:"h6", name:"Latte L", desc:"", price:50, sugar:false },
+      { id:"h7", name:"Latte M", desc:"", price:40, sugar:false },
+      { id:"h8", name:"Mocha L", desc:"", price:60, sugar:false },
+      { id:"h9", name:"Hot Chocolate L", desc:"", price:55, sugar:false },
+      { id:"h10", name:"Caramel Macchiato L", desc:"", price:60, sugar:false },
+      { id:"h11", name:"Spanish Latte L", desc:"", price:60, sugar:false },
+      { id:"h12", name:"Tea M", desc:"", price:20, sugar:true },
+      { id:"h13", name:"Anise M", desc:"", price:20, sugar:true },
+      { id:"h14", name:"Herbs M", desc:"", price:20, sugar:true },
+      { id:"h15", name:"Nescafe 3in1 L", desc:"", price:40, sugar:true },
+      { id:"h16", name:"Nescafe Classic L", desc:"", price:40, sugar:true },
+      { id:"h17", name:"Mint M", desc:"", price:20, sugar:true },
+      { id:"h18", name:"Cuppicino M", desc:"", price:40, sugar:false },
+      { id:"h19", name:"Self Help with Milk", desc:"", price:30, sugar:false },
+      { id:"h20", name:"Tea L", desc:"", price:25, sugar:true },
+      { id:"h21", name:"Flat White", desc:"", price:60, sugar:false },
+      { id:"h22", name:"Green Tea L", desc:"", price:25, sugar:true },
+      { id:"h23", name:"+Americano", desc:"", price:70, sugar:false },
+      { id:"h24", name:"Green Tea M", desc:"", price:25, sugar:true },
+      { id:"h25", name:"Turkish Coffee Double", desc:"", price:35, sugar:true },
+      { id:"h26", name:"Triple Shot", desc:"", price:70, sugar:false },
+      { id:"h27", name:"Farncwy M", desc:"", price:35, sugar:true },
+      { id:"h28", name:"Nescafe 3in1 M", desc:"", price:35, sugar:true },
+      { id:"h29", name:"Mint Tea M", desc:"", price:25, sugar:true },
+      { id:"h30", name:"Americano", desc:"", price:45, sugar:false }
+    ]},
+    { cat: "Water", items: [
+      { id:"w1", name:"Water", desc:"", price:10, sugar:false },
+      { id:"w2", name:"Water L", desc:"", price:15, sugar:false }
+    ]}
+  ];
+
+  let cart = [];
+  let currentItem = null;
+  let selectedSugar = "مظبوط";
+  let itemNote = "";
+
+  const urlParams = new URLSearchParams(window.location.search);
+  let tableNo = urlParams.get('table') || "";
+  const isAdmin = urlParams.get('admin') === 'true';
+
+  const WHATSAPP_PHONE = "201009282323";
+
+  const menuView = document.getElementById('menuView');
+  const adminView = document.getElementById('adminView');
+  const tablePrompt = document.getElementById('tablePrompt');
+  const tableChip = document.getElementById('tableChip');
+  const customerNameRow = document.getElementById('customerNameRow');
+  const customerNameText = document.getElementById('customerNameText');
+
+  renderTabs();
+  renderMenu();
+
+  if (isAdmin) {
+    menuView.style.display = 'none';
+    tablePrompt.style.display = 'none';
+    adminView.style.display = 'block';
+    setupAdmin();
+  } else if (!tableNo) {
+    tablePrompt.classList.add('show');
+  } else {
+    tablePrompt.classList.remove('show');
+    tableChip.textContent = 'طربيزة ' + tableNo;
+  }
+
+  document.getElementById('tableConfirmBtn').addEventListener('click', function() {
+    const inputVal = document.getElementById('tableInput').value.trim();
+    const nameVal = document.getElementById('nameInput').value.trim();
+    if (!inputVal) {
+      alert("برجاء أدخال رقم الطاولة");
+      return;
+    }
+    tableNo = inputVal;
+    tableChip.textContent = 'طربيزة ' + tableNo;
+    if (nameVal) {
+      customerNameRow.style.display = 'block';
+      customerNameText.textContent = nameVal;
+    }
+    tablePrompt.classList.remove('show');
+  });
+
+  function renderTabs() {
+    const tabsRow = document.getElementById('tabsRow');
+    tabsRow.innerHTML = MENU.map(function(c, i) {
+      return '<div class="tab ' + (i === 0 ? 'active' : '') + '" onclick="scrollToCat(\'' + c.cat + '\', this)">' + c.cat + '</div>';
+    }).join('');
+  }
+
+  window.scrollToCat = function(catName, el) {
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+    el.classList.add('active');
+    const target = document.getElementById('cat-' + catName);
+    if(target) target.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  function renderMenu() {
+    const main = document.getElementById('menuMain');
+    main.innerHTML = MENU.map(function(c) {
+      return '<div id="cat-' + c.cat + '">' +
+        '<div class="section-title">' + c.cat + '</div>' +
+        c.items.map(function(item) {
+          return '<div class="item">' +
+            '<div class="item-info">' +
+              '<div class="item-name">' + item.name + '</div>' +
+              '<div class="item-price">' + item.price + ' ج.م</div>' +
+            '</div>' +
+            '<button class="add-btn" onclick="openItemSheet(\'' + item.id + '\')">+</button>' +
+          '</div>';
+        }).join('') +
+      '</div>';
+    }).join('');
+  }
+
+  window.openItemSheet = function(id) {
+    let item = null;
+    MENU.forEach(function(c) {
+      c.items.forEach(function(i) {
+        if(i.id === id) item = i;
+      });
+    });
+    if (!item) return;
+
+    currentItem = item;
+    selectedSugar = "مظبوط";
+    itemNote = "";
+
+    const overlay = document.getElementById('itemOverlay');
+    const sheet = document.getElementById('itemSheet');
+
+    let html = '<div class="sheet-handle"></div>' +
+      '<h3>' + item.name + '</h3>' +
+      '<div class="sheet-price" style="color:var(--accent); font-weight:bold; margin-bottom:10px;">' + item.price + ' ج.م</div>';
+
+    if (item.sugar) {
+      html += '<div class="opt-label">مستوى السكر:</div>' +
+        '<div class="opt-row">' +
+          '<button class="opt-pill sel" onclick="selectSugar(this, \'مظبوط\')">مظبوط</button>' +
+          '<button class="opt-pill" onclick="selectSugar(this, \'زيادة\')">زيادة</button>' +
+          '<button class="opt-pill" onclick="selectSugar(this, \'سادة\')">سادة (بدون)</button>' +
+          '<button class="opt-pill" onclick="selectSugar(this, \'ع الرشيقة\')">ع الرشيقة</button>' +
+        '</div>';
+    }
+
+    html += '<div class="opt-label">ملاحظات خاصة:</div>' +
+      '<textarea id="noteInput" placeholder="أي إضافات أو ملاحظات..."></textarea>' +
+      '<button class="sheet-cta" onclick="confirmAddToCart()">إضافة للطلب</button>';
+
+    sheet.innerHTML = html;
+    overlay.classList.add('show');
+  };
+
+  window.selectSugar = function(btn, val) {
+    document.querySelectorAll('#itemSheet .opt-pill').forEach(function(p) { p.classList.remove('sel'); });
+    btn.classList.add('sel');
+    selectedSugar = val;
+  };
+
+  window.confirmAddToCart = function() {
+    const noteEl = document.getElementById('noteInput');
+    itemNote = noteEl ? noteEl.value.trim() : "";
+
+    cart.push({
+      item: currentItem,
+      sugar: currentItem.sugar ? selectedSugar : null,
+      note: itemNote
+    });
+    document.getElementById('itemOverlay').classList.remove('show');
+    updateCartBar();
+  };
+
+  function updateCartBar() {
+    const bar = document.getElementById('cartBar');
+    if (cart.length === 0) {
+      bar.classList.remove('show');
+      return;
+    }
+    bar.classList.add('show');
+    const total = cart.reduce(function(sum, i) { return sum + i.item.price; }, 0);
+    document.getElementById('cartBarText').textContent = cart.length + ' أصناف';
+    document.getElementById('cartBarSub').textContent = 'الإجمالي: ' + total + ' ج.م';
+  }
+
+  document.getElementById('openCartBtn').addEventListener('click', openCartSheet);
+
+  function openCartSheet() {
+    const overlay = document.getElementById('cartOverlay');
+    const sheet = document.getElementById('cartSheet');
+    const total = cart.reduce(function(sum, i) { return sum + i.item.price; }, 0);
+    const custName = customerNameText.textContent;
+
+    let cartItemsHtml = cart.map(function(c, i) {
+      return '<div class="cart-line">' +
+        '<div>' +
+          '<div class="cart-line-name" style="font-weight:600;">' + c.item.name + '</div>' +
+          '<div class="cart-line-meta">' + (c.sugar ? 'السكر: ' + c.sugar : '') + ' ' + (c.note ? '| ' + c.note : '') + '</div>' +
+          '<div class="cart-line-price" style="color:var(--accent); font-weight:bold;">' + c.item.price + ' ج.م</div>' +
+        '</div>' +
+        '<button class="cart-line-remove" onclick="removeFromCart(' + i + ')">حذف</button>' +
+      '</div>';
+    }).join('');
+
+    sheet.innerHTML = '<div class="sheet-handle"></div>' +
+      '<h3>تفاصيل الطلب 🛒</h3>' +
+      '<div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">طربيزة رقم: ' + (tableNo || 'غير محددة') + (custName ? ' | العميل: ' + custName : '') + '</div>' +
+      cartItemsHtml +
+      '<div style="display:flex; justify-content:space-between; margin:15px 0; font-weight:bold; font-size:1.1rem;">' +
+        '<span>الإجمالي:</span>' +
+        '<span style="color:var(--accent);">' + total + ' ج.م</span>' +
+      '</div>' +
+      '<div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">سيتم توجيهك للواتساب لإرسال الطلب مباشرة للمكان.</div>' +
+      '<button class="sheet-cta" style="background:var(--confirm); color:#fff;" onclick="sendToWhatsApp()">تأكيد وإرسال للواتساب 💬</button>';
+
+    overlay.classList.add('show');
+  }
+
+  window.removeFromCart = function(index) {
+    cart.splice(index, 1);
+    if (cart.length === 0) {
+      document.getElementById('cartOverlay').classList.remove('show');
+    } else {
+      openCartSheet();
+    }
+    updateCartBar();
+  };
+
+  window.sendToWhatsApp = function() {
+    const custName = customerNameText.textContent;
+    let msg = '*طلب جديد من سكون* ☕\n';
+    msg += '*الطاولة:* ' + (tableNo || 'غير محددة') + '\n';
+    if (custName) msg += '*اسم العميل:* ' + custName + '\n';
+    msg += '------------------------------\n';
+
+    let total = 0;
+    cart.forEach(function(c) {
+      total += c.item.price;
+      msg += '• ' + c.item.name + ' - ' + c.item.price + ' ج.م\n';
+      if (c.sugar) msg += '   السكر: ' + c.sugar + '\n';
+      if (c.note) msg += '   ملاحظة: ' + c.note + '\n';
+    });
+
+    msg += '------------------------------\n';
+    msg += '*الإجمالي:* ' + total + ' ج.م';
+
+    window.open('https://wa.me/' + WHATSAPP_PHONE + '?text=' + encodeURIComponent(msg), '_blank');
+  };
+
+  document.querySelectorAll('.overlay').forEach(function(ov) {
+    ov.addEventListener('click', function(e) {
+      if (e.target === ov && ov.id !== 'tablePrompt') ov.classList.remove('show');
+    });
+  });
+
+  function setupAdmin() {
+    document.getElementById('genQrBtn').addEventListener('click', generateQRs);
+    document.getElementById('printQrBtn').addEventListener('click', function() { window.print(); });
+    generateQRs();
+  }
+
+  function generateQRs() {
+    const from = parseInt(document.getElementById('fromTable').value) || 1;
+    const to = parseInt(document.getElementById('toTable').value) || 10;
+    const grid = document.getElementById('qrGrid');
+    grid.innerHTML = '';
+
+    const baseUrl = window.location.href.split('?')[0];
+
+    for (let i = from; i <= to; i++) {
+      const targetUrl = baseUrl + '?table=' + i;
+      const card = document.createElement('div');
+      card.className = 'qr-card';
+      
+      const canvas = document.createElement('canvas');
+      card.appendChild(canvas);
+
+      const label = document.createElement('div');
+      label.className = 'qr-label';
+      label.textContent = 'طربيزة ' + i;
+      card.appendChild(label);
+
+      grid.appendChild(card);
+
+      if (typeof QRious !== 'undefined') {
+        new QRious({
+          element: canvas,
+          value: targetUrl,
+          size: 150
+        });
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
