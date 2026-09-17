@@ -20,7 +20,7 @@
       --border: #2a2a2a;
       --confirm: #25d366;
       --danger: #ff4d4d;
-      --shadow: rgba(0, 0, 0, 0.4);
+      --shadow: rgba(0, 0, 0, 0.6);
     }
 
     [data-theme="light"] {
@@ -29,9 +29,9 @@
       --accent: #d4af37;
       --accent-hover: #b8962d;
       --text: #1d1d1f;
-      --text-muted: #6e6e73;
-      --border: #e5e5e5;
-      --shadow: rgba(0, 0, 0, 0.08);
+      --text-muted: #555555;
+      --border: #d1d1d6;
+      --shadow: rgba(0, 0, 0, 0.12);
     }
 
     * {
@@ -58,7 +58,7 @@
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 1000;
       box-shadow: 0 2px 10px var(--shadow);
     }
 
@@ -70,9 +70,10 @@
     }
 
     .table-info {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
       margin-top: 2px;
+      font-weight: 600;
     }
 
     .theme-toggle-btn {
@@ -89,18 +90,18 @@
       gap: 5px;
     }
 
-    /* تثبيت شريط الأقسام عند التمرير */
+    /* إصلاح وضوح شريط الأقسام المباشر المثبت */
     .tabs {
       display: flex;
       overflow-x: auto;
-      background: var(--card);
-      padding: 10px 15px;
+      background-color: var(--card) !important;
+      padding: 12px 15px;
       gap: 10px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 2px solid var(--border);
       position: sticky;
       top: 61px;
-      z-index: 99;
-      box-shadow: 0 4px 6px -1px var(--shadow);
+      z-index: 999;
+      box-shadow: 0 4px 12px var(--shadow);
     }
 
     .tabs::-webkit-scrollbar { display: none; }
@@ -110,18 +111,20 @@
       background: var(--bg);
       border-radius: 25px;
       white-space: nowrap;
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 0.9rem;
+      font-weight: 700;
       border: 1px solid var(--border);
       cursor: pointer;
-      color: var(--text-muted);
+      color: var(--text);
+      opacity: 0.9;
     }
 
     .tab.active {
       background: var(--accent);
       color: #000;
-      font-weight: 700;
+      font-weight: 800;
       border-color: var(--accent);
+      opacity: 1;
     }
 
     .container {
@@ -131,13 +134,13 @@
     }
 
     .section-title {
-      font-size: 1.1rem;
-      font-weight: 700;
+      font-size: 1.2rem;
+      font-weight: 800;
       color: var(--accent);
       margin: 25px 0 12px 0;
       padding-bottom: 6px;
       border-bottom: 2px solid var(--border);
-      scroll-margin-top: 120px;
+      scroll-margin-top: 130px;
     }
 
     .item {
@@ -201,6 +204,41 @@
       cursor: pointer;
     }
 
+    /* التحكم في الكمية (العدد) */
+    .qty-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin: 15px 0;
+      background: var(--bg);
+      padding: 8px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .qty-btn {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qty-val {
+      font-size: 1.2rem;
+      font-weight: 800;
+      min-width: 30px;
+      text-align: center;
+    }
+
     /* Modals & Overlays */
     .overlay {
       position: fixed;
@@ -235,7 +273,7 @@
       margin: 0 auto 18px auto;
     }
 
-    .opt-label { margin: 12px 0 6px 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+    .opt-label { margin: 12px 0 6px 0; font-size: 0.9rem; color: var(--text); font-weight: 700; }
     .opt-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
 
     .opt-pill {
@@ -246,6 +284,7 @@
       border-radius: 16px;
       font-size: 0.85rem;
       cursor: pointer;
+      font-weight: 600;
     }
 
     .opt-pill.sel {
@@ -283,7 +322,7 @@
       border: none;
       padding: 14px;
       border-radius: 12px;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 1rem;
       cursor: pointer;
       margin-top: 8px;
@@ -466,6 +505,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let currentItem = null;
   let selectedSugar = "مظبوط";
   let itemNote = "";
+  let itemQty = 1;
 
   const urlParams = new URLSearchParams(window.location.search);
   let tableNo = urlParams.get('table') || "";
@@ -481,7 +521,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const customerNameText = document.getElementById('customerNameText');
   const themeToggleBtn = document.getElementById('themeToggleBtn');
 
-  // Toggle Theme Function
   themeToggleBtn.addEventListener('click', function() {
     const currentTheme = document.body.getAttribute('data-theme');
     if (currentTheme === 'dark') {
@@ -507,13 +546,11 @@ document.addEventListener('DOMContentLoaded', function() {
     tablePrompt.classList.add('show');
   } else {
     tableChip.textContent = 'طربيزة ' + tableNo;
-    // إذا كانت الطاولة محددة في الـ URL، نطلب الاسم فقط
     document.getElementById('tableInput').value = tableNo;
     document.getElementById('tableInput').style.display = 'none';
     tablePrompt.classList.add('show');
   }
 
-  // التأكد من إدخال رقم الطاولة والاسم إجبارياً
   document.getElementById('tableConfirmBtn').addEventListener('click', function() {
     const inputVal = document.getElementById('tableInput').value.trim();
     const nameVal = document.getElementById('nameInput').value.trim();
@@ -578,6 +615,7 @@ document.addEventListener('DOMContentLoaded', function() {
     currentItem = item;
     selectedSugar = "مظبوط";
     itemNote = "";
+    itemQty = 1;
 
     const overlay = document.getElementById('itemOverlay');
     const sheet = document.getElementById('itemSheet');
@@ -596,12 +634,25 @@ document.addEventListener('DOMContentLoaded', function() {
         '</div>';
     }
 
+    html += '<div class="opt-label">الكمية:</div>' +
+      '<div class="qty-control">' +
+        '<button class="qty-btn" onclick="changeQty(-1)">-</button>' +
+        '<span class="qty-val" id="qtyVal">1</span>' +
+        '<button class="qty-btn" onclick="changeQty(1)">+</button>' +
+      '</div>';
+
     html += '<div class="opt-label">ملاحظات خاصة:</div>' +
       '<textarea id="noteInput" placeholder="أي إضافات أو ملاحظات..."></textarea>' +
       '<button class="sheet-cta" onclick="confirmAddToCart()">إضافة للطلب</button>';
 
     sheet.innerHTML = html;
     overlay.classList.add('show');
+  };
+
+  window.changeQty = function(delta) {
+    itemQty += delta;
+    if (itemQty < 1) itemQty = 1;
+    document.getElementById('qtyVal').textContent = itemQty;
   };
 
   window.selectSugar = function(btn, val) {
@@ -617,7 +668,8 @@ document.addEventListener('DOMContentLoaded', function() {
     cart.push({
       item: currentItem,
       sugar: currentItem.sugar ? selectedSugar : null,
-      note: itemNote
+      note: itemNote,
+      qty: itemQty
     });
     document.getElementById('itemOverlay').classList.remove('show');
     updateCartBar();
@@ -630,8 +682,9 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     bar.classList.add('show');
-    const total = cart.reduce(function(sum, i) { return sum + i.item.price; }, 0);
-    document.getElementById('cartBarText').textContent = cart.length + ' أصناف';
+    const totalCount = cart.reduce(function(sum, i) { return sum + i.qty; }, 0);
+    const total = cart.reduce(function(sum, i) { return sum + (i.item.price * i.qty); }, 0);
+    document.getElementById('cartBarText').textContent = totalCount + ' أصناف';
     document.getElementById('cartBarSub').textContent = 'الإجمالي: ' + total + ' ج.م';
   }
 
@@ -640,15 +693,15 @@ document.addEventListener('DOMContentLoaded', function() {
   function openCartSheet() {
     const overlay = document.getElementById('cartOverlay');
     const sheet = document.getElementById('cartSheet');
-    const total = cart.reduce(function(sum, i) { return sum + i.item.price; }, 0);
+    const total = cart.reduce(function(sum, i) { return sum + (i.item.price * i.qty); }, 0);
     const custName = customerNameText.textContent;
 
     let cartItemsHtml = cart.map(function(c, i) {
       return '<div class="cart-line">' +
         '<div>' +
-          '<div class="cart-line-name" style="font-weight:700;">' + c.item.name + '</div>' +
+          '<div class="cart-line-name" style="font-weight:700;">' + c.item.name + ' (x' + c.qty + ')</div>' +
           '<div class="cart-line-meta">' + (c.sugar ? 'السكر: ' + c.sugar : '') + ' ' + (c.note ? '| ' + c.note : '') + '</div>' +
-          '<div class="cart-line-price" style="color:var(--accent); font-weight:800; margin-top:2px;">' + c.item.price + ' ج.م</div>' +
+          '<div class="cart-line-price" style="color:var(--accent); font-weight:800; margin-top:2px;">' + (c.item.price * c.qty) + ' ج.م</div>' +
         '</div>' +
         '<button class="cart-line-remove" onclick="removeFromCart(' + i + ')">حذف</button>' +
       '</div>';
@@ -687,14 +740,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let total = 0;
     cart.forEach(function(c) {
-      total += c.item.price;
-      msg += '• ' + c.item.name + ' - ' + c.item.price + ' ج.م\n';
+      const itemTotal = c.item.price * c.qty;
+      total += itemTotal;
+      msg += '• ' + c.item.name + ' (العدد: ' + c.qty + ') - ' + itemTotal + ' ج.م\n';
       if (c.sugar) msg += '   السكر: ' + c.sugar + '\n';
       if (c.note) msg += '   ملاحظة: ' + c.note + '\n';
     });
 
     msg += '------------------------------\n';
-    msg += '*الإجمالي:* ' + total + ' ج.م';
+    msg += '*الإجمالي النهائي:* ' + total + ' ج.م';
 
     window.open('https://wa.me/' + WHATSAPP_PHONE + '?text=' + encodeURIComponent(msg), '_blank');
   };
