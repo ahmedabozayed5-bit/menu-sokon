@@ -17,9 +17,21 @@
       --accent-hover: #b8962d;
       --text: #ffffff;
       --text-muted: #aaaaaa;
-      --border: #333333;
+      --border: #2a2a2a;
       --confirm: #25d366;
       --danger: #ff4d4d;
+      --shadow: rgba(0, 0, 0, 0.4);
+    }
+
+    [data-theme="light"] {
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --accent: #d4af37;
+      --accent-hover: #b8962d;
+      --text: #1d1d1f;
+      --text-muted: #6e6e73;
+      --border: #e5e5e5;
+      --shadow: rgba(0, 0, 0, 0.08);
     }
 
     * {
@@ -28,63 +40,87 @@
       padding: 0;
       font-family: 'Cairo', sans-serif;
       -webkit-tap-highlight-color: transparent;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
     }
 
     body {
       background-color: var(--bg);
       color: var(--text);
-      padding-bottom: 90px;
+      padding-bottom: 100px;
     }
 
     header {
       background-color: var(--card);
-      padding: 15px;
-      text-align: center;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
       z-index: 100;
+      box-shadow: 0 2px 10px var(--shadow);
     }
 
-    header h1 {
+    .header-info h1 {
       color: var(--accent);
-      font-size: 1.5rem;
+      font-size: 1.4rem;
+      font-weight: 800;
+      line-height: 1.2;
     }
 
     .table-info {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
-      margin-top: 4px;
+      margin-top: 2px;
     }
 
+    .theme-toggle-btn {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* تثبيت شريط الأقسام عند التمرير */
     .tabs {
       display: flex;
       overflow-x: auto;
       background: var(--card);
-      padding: 10px;
+      padding: 10px 15px;
       gap: 10px;
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 61px;
       z-index: 99;
+      box-shadow: 0 4px 6px -1px var(--shadow);
     }
 
     .tabs::-webkit-scrollbar { display: none; }
 
     .tab {
-      padding: 8px 16px;
+      padding: 8px 18px;
       background: var(--bg);
-      border-radius: 20px;
+      border-radius: 25px;
       white-space: nowrap;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
       border: 1px solid var(--border);
       cursor: pointer;
+      color: var(--text-muted);
     }
 
     .tab.active {
       background: var(--accent);
       color: #000;
-      font-weight: bold;
+      font-weight: 700;
       border-color: var(--accent);
     }
 
@@ -95,38 +131,45 @@
     }
 
     .section-title {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
+      font-weight: 700;
       color: var(--accent);
-      margin: 20px 0 10px 0;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 5px;
+      margin: 25px 0 12px 0;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--border);
+      scroll-margin-top: 120px;
     }
 
     .item {
       background: var(--card);
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 10px;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border: 1px solid var(--border);
+      box-shadow: 0 2px 8px var(--shadow);
     }
 
     .item-info { flex: 1; }
-    .item-name { font-weight: 600; font-size: 1rem; }
-    .item-price { color: var(--accent); font-weight: bold; margin-top: 4px; }
+    .item-name { font-weight: 700; font-size: 0.95rem; }
+    .item-price { color: var(--accent); font-weight: 800; margin-top: 4px; font-size: 0.9rem; }
 
     .add-btn {
       background: var(--accent);
       color: #000;
       border: none;
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: bold;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(214, 175, 55, 0.4);
     }
 
     .cart-bar {
@@ -143,7 +186,7 @@
       display: none;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
       z-index: 1000;
     }
 
@@ -152,9 +195,9 @@
       background: #000;
       color: #fff;
       border: none;
-      padding: 6px 15px;
-      border-radius: 15px;
-      font-weight: bold;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: 700;
       cursor: pointer;
     }
 
@@ -162,7 +205,8 @@
     .overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
       display: none;
       justify-content: center;
       align-items: flex-end;
@@ -175,30 +219,31 @@
       background: var(--card);
       width: 100%;
       max-width: 600px;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      padding: 20px;
-      max-height: 80vh;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 24px;
+      max-height: 85vh;
       overflow-y: auto;
+      box-shadow: 0 -5px 25px rgba(0,0,0,0.2);
     }
 
     .sheet-handle {
       width: 40px;
-      height: 4px;
+      height: 5px;
       background: var(--border);
-      border-radius: 2px;
-      margin: 0 auto 15px auto;
+      border-radius: 3px;
+      margin: 0 auto 18px auto;
     }
 
-    .opt-label { margin: 10px 0 5px 0; font-size: 0.9rem; color: var(--text-muted); }
+    .opt-label { margin: 12px 0 6px 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
     .opt-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
 
     .opt-pill {
       background: var(--bg);
       border: 1px solid var(--border);
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 15px;
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 16px;
       font-size: 0.85rem;
       cursor: pointer;
     }
@@ -206,19 +251,29 @@
     .opt-pill.sel {
       border-color: var(--accent);
       color: var(--accent);
-      background: rgba(212, 175, 55, 0.1);
+      background: rgba(212, 175, 55, 0.15);
+      font-weight: 700;
     }
 
-    textarea {
+    input, textarea {
       width: 100%;
       background: var(--bg);
       border: 1px solid var(--border);
-      color: #fff;
-      padding: 10px;
-      border-radius: 8px;
+      color: var(--text);
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      outline: none;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--accent);
+    }
+
+    textarea {
       resize: none;
-      height: 60px;
-      margin-bottom: 15px;
+      height: 70px;
     }
 
     .sheet-cta {
@@ -226,30 +281,32 @@
       background: var(--accent);
       color: #000;
       border: none;
-      padding: 12px;
-      border-radius: 10px;
-      font-weight: bold;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 700;
       font-size: 1rem;
       cursor: pointer;
+      margin-top: 8px;
     }
 
     .cart-line {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 0;
+      padding: 12px 0;
       border-bottom: 1px solid var(--border);
     }
 
-    .cart-line-meta { font-size: 0.8rem; color: var(--text-muted); }
-    .cart-line-remove { color: var(--danger); background: none; border: none; cursor: pointer; }
+    .cart-line-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+    .cart-line-remove { color: var(--danger); background: none; border: none; cursor: pointer; font-weight: 600; }
 
     /* Admin View & QR Generator */
     .admin-box {
       padding: 20px;
       background: var(--card);
       margin: 20px;
-      border-radius: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
     }
 
     .qr-grid {
@@ -262,8 +319,8 @@
     .qr-card {
       background: #fff;
       color: #000;
-      padding: 10px;
-      border-radius: 8px;
+      padding: 12px;
+      border-radius: 10px;
       text-align: center;
     }
 
@@ -272,7 +329,7 @@
       height: auto !important;
     }
 
-    .qr-label { font-weight: bold; margin-top: 5px; font-size: 0.9rem; }
+    .qr-label { font-weight: bold; margin-top: 6px; font-size: 0.9rem; }
 
     @media print {
       body * { visibility: hidden; }
@@ -282,21 +339,28 @@
     }
   </style>
 </head>
-<body>
+<body data-theme="dark">
 
 <header>
-  <h1>سكون ☕</h1>
-  <div class="table-info" id="tableChip">اختر طلبك</div>
-  <div class="table-info" id="customerNameRow" style="display:none;">العميل: <span id="customerNameText"></span></div>
+  <div class="header-info">
+    <h1>سكون ☕</h1>
+    <div class="table-info" id="tableChip">اختر طلبك</div>
+    <div class="table-info" id="customerNameRow" style="display:none;">العميل: <span id="customerNameText"></span></div>
+  </div>
+  <button class="theme-toggle-btn" id="themeToggleBtn">
+    <span id="themeIcon">☀️</span> <span id="themeText">وضع فاتح</span>
+  </button>
 </header>
 
 <!-- Prompt Modal if no table query -->
 <div class="overlay" id="tablePrompt" style="align-items:center;">
-  <div class="sheet" style="border-radius:15px; text-align:center;">
-    <h3>مرحباً بك في سكون</h3>
-    <p style="font-size:0.85rem; color:var(--text-muted); margin: 10px 0;">يرجى إدخال البيانات للبدء</p>
-    <input type="number" id="tableInput" placeholder="رقم الطاولة" style="width:100%; padding:10px; margin-bottom:10px; background:var(--bg); border:1px solid var(--border); color:#fff; border-radius:8px; text-align:center;">
-    <input type="text" id="nameInput" placeholder="الاسم (اختياري)" style="width:100%; padding:10px; margin-bottom:15px; background:var(--bg); border:1px solid var(--border); color:#fff; border-radius:8px; text-align:center;">
+  <div class="sheet" style="border-radius:20px; text-align:center; max-width: 400px;">
+    <h3 style="margin-bottom: 5px;">مرحباً بك في سكون</h3>
+    <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom: 18px;">يرجى إدخال البيانات للبدء</p>
+    
+    <input type="number" id="tableInput" placeholder="رقم الطاولة *" style="text-align:center;">
+    <input type="text" id="nameInput" placeholder="الاسم (إجباري) *" style="text-align:center;">
+    
     <button class="sheet-cta" id="tableConfirmBtn">دخول للمنيو</button>
   </div>
 </div>
@@ -310,11 +374,11 @@
   <div class="admin-box no-print">
     <h3>مولد أكواد الطاولات (QR Generator)</h3>
     <br>
-    <label>من طاولة: <input type="number" id="fromTable" value="1" style="width:50px; padding:5px;"></label>
-    <label>إلى طاولة: <input type="number" id="toTable" value="10" style="width:50px; padding:5px;"></label>
+    <label>من طاولة: <input type="number" id="fromTable" value="1" style="width:70px; padding:6px; text-align:center;"></label>
+    <label style="margin-right: 15px;">إلى طاولة: <input type="number" id="toTable" value="10" style="width:70px; padding:6px; text-align:center;"></label>
     <br><br>
-    <button class="sheet-cta" id="genQrBtn" style="width:auto; padding:8px 20px;">توليد QR</button>
-    <button class="sheet-cta" id="printQrBtn" style="width:auto; padding:8px 20px; background:#fff; color:#000;">طباعة الأكواد</button>
+    <button class="sheet-cta" id="genQrBtn" style="width:auto; padding:10px 20px;">توليد QR</button>
+    <button class="sheet-cta" id="printQrBtn" style="width:auto; padding:10px 20px; background:var(--bg); color:var(--text); border:1px solid var(--border);">طباعة الأكواد</button>
   </div>
   <div class="qr-grid" id="qrGrid"></div>
 </div>
@@ -415,6 +479,21 @@ document.addEventListener('DOMContentLoaded', function() {
   const tableChip = document.getElementById('tableChip');
   const customerNameRow = document.getElementById('customerNameRow');
   const customerNameText = document.getElementById('customerNameText');
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+
+  // Toggle Theme Function
+  themeToggleBtn.addEventListener('click', function() {
+    const currentTheme = document.body.getAttribute('data-theme');
+    if (currentTheme === 'dark') {
+      document.body.setAttribute('data-theme', 'light');
+      document.getElementById('themeIcon').textContent = '🌙';
+      document.getElementById('themeText').textContent = 'وضع داكن';
+    } else {
+      document.body.setAttribute('data-theme', 'dark');
+      document.getElementById('themeIcon').textContent = '☀️';
+      document.getElementById('themeText').textContent = 'وضع فاتح';
+    }
+  });
 
   renderTabs();
   renderMenu();
@@ -427,23 +506,31 @@ document.addEventListener('DOMContentLoaded', function() {
   } else if (!tableNo) {
     tablePrompt.classList.add('show');
   } else {
-    tablePrompt.classList.remove('show');
     tableChip.textContent = 'طربيزة ' + tableNo;
+    // إذا كانت الطاولة محددة في الـ URL، نطلب الاسم فقط
+    document.getElementById('tableInput').value = tableNo;
+    document.getElementById('tableInput').style.display = 'none';
+    tablePrompt.classList.add('show');
   }
 
+  // التأكد من إدخال رقم الطاولة والاسم إجبارياً
   document.getElementById('tableConfirmBtn').addEventListener('click', function() {
     const inputVal = document.getElementById('tableInput').value.trim();
     const nameVal = document.getElementById('nameInput').value.trim();
+    
     if (!inputVal) {
       alert("برجاء أدخال رقم الطاولة");
       return;
     }
+    if (!nameVal) {
+      alert("برجاء إدخال الاسم للبدء");
+      return;
+    }
+
     tableNo = inputVal;
     tableChip.textContent = 'طربيزة ' + tableNo;
-    if (nameVal) {
-      customerNameRow.style.display = 'block';
-      customerNameText.textContent = nameVal;
-    }
+    customerNameRow.style.display = 'block';
+    customerNameText.textContent = nameVal;
     tablePrompt.classList.remove('show');
   });
 
@@ -496,8 +583,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const sheet = document.getElementById('itemSheet');
 
     let html = '<div class="sheet-handle"></div>' +
-      '<h3>' + item.name + '</h3>' +
-      '<div class="sheet-price" style="color:var(--accent); font-weight:bold; margin-bottom:10px;">' + item.price + ' ج.م</div>';
+      '<h3 style="margin-bottom: 4px;">' + item.name + '</h3>' +
+      '<div class="sheet-price" style="color:var(--accent); font-weight:800; font-size:1.1rem; margin-bottom:15px;">' + item.price + ' ج.م</div>';
 
     if (item.sugar) {
       html += '<div class="opt-label">مستوى السكر:</div>' +
@@ -559,9 +646,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let cartItemsHtml = cart.map(function(c, i) {
       return '<div class="cart-line">' +
         '<div>' +
-          '<div class="cart-line-name" style="font-weight:600;">' + c.item.name + '</div>' +
+          '<div class="cart-line-name" style="font-weight:700;">' + c.item.name + '</div>' +
           '<div class="cart-line-meta">' + (c.sugar ? 'السكر: ' + c.sugar : '') + ' ' + (c.note ? '| ' + c.note : '') + '</div>' +
-          '<div class="cart-line-price" style="color:var(--accent); font-weight:bold;">' + c.item.price + ' ج.م</div>' +
+          '<div class="cart-line-price" style="color:var(--accent); font-weight:800; margin-top:2px;">' + c.item.price + ' ج.م</div>' +
         '</div>' +
         '<button class="cart-line-remove" onclick="removeFromCart(' + i + ')">حذف</button>' +
       '</div>';
@@ -573,7 +660,7 @@ document.addEventListener('DOMContentLoaded', function() {
       cartItemsHtml +
       '<div style="display:flex; justify-content:space-between; margin:15px 0; font-weight:bold; font-size:1.1rem;">' +
         '<span>الإجمالي:</span>' +
-        '<span style="color:var(--accent);">' + total + ' ج.م</span>' +
+        '<span style="color:var(--accent); font-weight:800;">' + total + ' ج.م</span>' +
       '</div>' +
       '<div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">سيتم توجيهك للواتساب لإرسال الطلب مباشرة للمكان.</div>' +
       '<button class="sheet-cta" style="background:var(--confirm); color:#fff;" onclick="sendToWhatsApp()">تأكيد وإرسال للواتساب 💬</button>';
